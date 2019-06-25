@@ -1,153 +1,225 @@
 //Global Variables
+var time;
+var right;
+var wrong;
+var $timer = $(".timer");
 var $trivia = $("#trivia");
+var $main = $(".main");
+var intervalID;
+var runTime;
 var questions = [{
     text: "1. Where is King's Landing?",
-    option: [{
-        text: "South of Westeros.",
-        id: "1a"
-    }, {
-        text: "North of Westeros",
-        id: "1b"
-    }, {
-        text: "South of Essos",
-        id: "1c"
-    }, {
-        text: "North of Essos",
-        id: "1d"
-    }]
+    option: {
+        text: "South of Westeros."
+        ,
+        text: "North of Westeros"
+        ,
+        text: "South of Essos"
+        ,
+        text: "North of Essos"
+    },
+    correct: "South of Westeros"
 }, {
     text: "2. What is The Purple Wedding?",
-    option: [{
-        text: "Edmure Tully and Roslin Frey's Wedding",
-        id: "2a"
-    }, {
-        text: "Robb Stark and Talisa Maegyr's Wedding",
-        id: "2b"
-    }, {
-        text: "Tyrion Lannister and Sansa Stark's Wedding",
-        id: "2c"
-    }, {
-        text: "Joffrey Baratheon and Margaery Tyrell's Wedding",
-        id: "2d"
-    }]
+    option: {
+        text: "Edmure Tully and Roslin Frey's Wedding"
+        ,
+        text: "Robb Stark and Talisa Maegyr's Wedding"
+        ,
+        text: "Tyrion Lannister and Sansa Stark's Wedding"
+        ,
+        text: "Joffrey Baratheon and Margaery Tyrell's Wedding"
+    },
+    correct: "Joffrey Baratheon and Margaery Tyrell's Wedding"
 }, {
     text: "3. What is the meaning of the phrase 'Valar Dohaeris' ? ",
-    option: [{
-        text: "All men must live",
-        id: "3a"
-    }, {
-        text: "All men must die",
-        id: "3b"
-    }, {
-        text: "All men must serve",
-        id: "3c"
-    }, {
-        text: "All men must kill",
-        id: "3d"
-    }]
+    option: {
+        text: "All men must live"
+        ,
+        text: "All men must die"
+        ,
+        text: "All men must serve"
+        ,
+        text: "All men must kill"
+    },
+    correct: "All men must serve"
 }, {
     text: "4. Who sits on the Iron Throne in the end?",
-    option: [{
-        text: "Jon Snow/Aegon VII Targaryen",
-        id: "4a"
-    }, {
-        text: "Daenerys Targaryen",
-        id: "4b"
-    }, {
-        text: "Brandon Stark",
-        id: "4c"
-    }, {
-        text: "No One",
-        id: "4d"
-    }]
+    option: {
+        text: "Jon Snow/Aegon VI Targaryen"
+        ,
+        text: "Daenerys Targaryen"
+        ,
+        text: "Brandon Stark"
+        ,
+        text: "No One"
+    },
+    correct: "No One"
 }, {
     text: "5. Who is 'The Prince That Was Promised' according to the show?",
-    option: [{
-        text: "Jon Snow/Aegon VII Targaryen",
-        id: "5a"
-    }, {
-        text: "Daenerys Targaryen",
-        id: "5b"
-    }, {
-        text: "Arya Stark",
-        id: "5c"
-    }, {
-        text: "Jamie Lannister",
-        id: "5d"
-    }]
+    option: {
+        text: "Jon Snow/Aegon VI Targaryen"
+        ,
+        text: "Daenerys Targaryen"
+
+        ,
+        text: "Arya Stark"
+        ,
+        text: "Jamie Lannister"
+    },
+    correct: "Arya Stark"
 }, {
     text: "6. What is Hodor's real name?",
-    option: [{
-        text: "Willace",
-        id: "6a"
-    }, {
-        text: "Wylis",
-        id: "6b"
-    }, {
-        text: "Wyllis",
-        id: "6c"
-    }, {
-        text: "Wallace",
-        id: "6d"
-    }]
+    option: {
+        text: "Willace"
+        ,
+        text: "Wylis"
+        ,
+        text: "Wyllis"
+        ,
+        text: "Wallace"
+    },
+    correct: "Wylis"
 }, {
     text: "7. Who made The Iron Throne?",
-    option: [{
-        text: "Balerion The Dread",
-        id: "7a"
-    }, {
-        text: "Aegon I Targaryen",
-        id: "7b"
-    }, {
-        text: "Aerys II Targaryen/The Mad King",
-        id: "7c"
-    }, {
-        text: "Tywin Lannister",
-        id: "7d"
-    }]
+    option: {
+        text: "Balerion The Dread"
+        ,
+        text: "Aegon I Targaryen"
+        ,
+        text: "Aerys II Targaryen/The Mad King"
+        ,
+        text: "Tywin Lannister"
+    },
+    correct: "Balerion The Dread"
 }, {
     text: "8. Which of the following is not one of Jamie Lannister's alias",
-    option: [{
-        text: "Kingslayer",
-        id: "8a"
-    }, {
-        text: "Kingkiller",
-        id: "8b"
-    }, {
-        text: "Lord of Casterly Rock",
-        id: "8c"
-    }, {
-        text: "Lord Commander of the Kingsguard",
-        id: "8d"
-    }]
+    option: {
+        text: "Kingslayer"
+        ,
+        text: "Kingkiller"
+
+        ,
+        text: "Lord of Casterly Rock"
+        ,
+        text: "Lord Commander of the Kingsguard"
+    },
+    correct: "Lord of Casterly Rock"
 }, {
     text: "9. Which of the following houses extinct?",
-    option: [{
-        text: "Lannisters",
-        id: "9a"
-    }, {
-        text: "Tyrells",
-        id: "9b"
-    }, {
-        text: "Targaryens",
-        id: "9c"
-    }, {
-        text: "Baratheons",
-        id: "9d"
-    }]
+    option: {
+        text: "Lannisters"
+        ,
+        text: "Tyrells"
+        ,
+        text: "Targaryens"
+        ,
+        text: "Baratheons"
+    },
+    correct: "Tyrells"
 }, {
     text: "10. Who is currently The King/Queen of the Seven Kingdom?",
-    option: [{
-        text: "Bran Stark",
-        id: "10a"
-    }, {
-        text: "Jon Snow",
-        id: "10b"
-    }, {
-        text: "Daenerys Targaryen",
-        id: "10c"
-    }, {
-        text: "No One",
-        id: "10d"
-    }]
+    option: {
+        text: "Bran Stark"
+        ,
+        text: "Jon Snow"
+        ,
+        text: "Daenerys Targaryen"
+        ,
+        text: "No One"
+    },
+    correct: "No One"
 }]
+
+// start
+function start() {
+    time = 120;
+    var currentTime = timeConverter(time);
+    $timer.text(currentTime);
+    intervalID = setInterval(countDown, 1000);
+}
+function countDown() {
+    time--;
+    var currentTime = timeConverter(time);
+    $timer.text(currentTime);
+    if (time === 0) {
+        endGame();
+    }
+}
+
+    
+
+
+function buildQuestions() {
+    for (var i = 0; i < questions.length; i++) {
+        var $question = buildQuestion(questions[i], i);
+        $trivia.append($question);
+    }
+    console.log($question);
+    var $button = $('<button type="submit" class="btn btn-primary">Submit Answers</button>');
+    $trivia.append($button);
+}
+
+function buildQuestion(question, index) {
+    var $fullQuestion = $('<div class="full-question">');
+    var $question = $('<h1 class="question">');
+    $question.text(question.text);
+    $fullQuestion.append($question);
+    var len = question.responses.length;
+    for(var i = 0; i < len; i++) {
+        var response = question.responses[i];
+        var $response = buildResponse(response, index);
+        $fullQuestion.append($response);
+    }
+    console.log($fullQuestion);
+    return $fullQuestion;
+}
+
+function buildResponse(response, index) {
+    var $responseInput = $('<input class="form-check-input" type="radio">');
+     $responseInput.addClass(questionName);
+    var $responseLabel = $('<label class="form-check-label">');
+    $responseLabel.text(response.text)
+    var $input = $('<div class="form-check">');
+    $input.append($responseInput);
+    $input.append($responseLabel);
+    return $input;
+}
+
+
+
+
+function endGame() {
+    //TODO:
+    //Show the score and right answer and wrong answer
+    if($input===option){
+        console.log("win");
+        right++;
+    } else {
+        wrong++;
+    }
+}
+start();
+buildQuestions();
+// the player will answer 10 multiples questions
+//game end when player click submit or the clock runs out. 
+//when the game ends, show right answer and wrong answer
+
+function timeConverter(t) {
+    var minutes = Math.floor(t / 60);
+    var seconds = t - (minutes * 60);
+
+    if (seconds < 10) {
+        seconds = "0" + seconds;
+    }
+
+    if (minutes === 0) {
+        minutes = "00";
+    }
+
+    else if (minutes < 10) {
+        minutes = "0" + minutes;
+    }
+
+    return minutes + ":" + seconds;
+}
